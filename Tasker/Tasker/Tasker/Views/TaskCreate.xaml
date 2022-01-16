@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Tasker.Views.TaskCreate"
+             Title="{Binding Title}">
+    <ContentPage.Content>
+        <StackLayout>
+            <Entry Placeholder="Title" Text="{Binding TaskName}" ReturnType="Next"/>
+            <Entry Placeholder="Description" Text="{Binding TaskDescription}" ReturnType="Done"/>
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Create" Command="{Binding CreateClickedCommand}" />
+                <Button Text="Cancel" Command="{Binding CancelClikedCommand}" />
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
