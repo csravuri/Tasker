@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:widgets="clr-namespace:Tasker.Views.Widgets"
+             x:Class="Tasker.Views.Widgets.TaskGroup"
+             x:Name="this">
+    <ContentView.Content>
+        <StackLayout Padding="5">
+            <Frame Padding="5" BorderColor="Red" CornerRadius="10">
+                <StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="{Binding GroupTitle, Source={x:Reference this}}"
+                               TextDecorations="Underline"
+                               FontSize="20"
+                               TextColor="#000" />
+                        <ImageButton Source="{Binding ExpandCollapseButtonIcon, Source={x:Reference this}}"
+                                     Clicked="ExpandCollapseButtonClicked"
+                                     CornerRadius="20"
+                                     BackgroundColor="Transparent"
+                                     WidthRequest="30"
+                                     HorizontalOptions="EndAndExpand" />
+                    </StackLayout>
+                    <CollectionView ItemsSource="{Binding Items, Source={x:Reference this}}"
+                                    EmptyView="No tasks"
+                                    IsVisible="{Binding IsItemsVisible, Source={x:Reference this}}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <widgets:TaskCard TaskHeader="{Binding .}" TaskStatusChange="OnTaskStatusChange" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
+            </Frame>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>
