@@ -15,7 +15,7 @@
 		<ApplicationTitle>Tasker</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.tasker</ApplicationId>
+		<ApplicationId>in.csravuri.tasker</ApplicationId>
 		<ApplicationIdGuid>57648975-f0b0-4bda-89d7-1863cd2fcd23</ApplicationIdGuid>
 
 		<!-- Versions -->
@@ -51,6 +51,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
+		<PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.6" />
 	</ItemGroup>
 
 	<ItemGroup>
