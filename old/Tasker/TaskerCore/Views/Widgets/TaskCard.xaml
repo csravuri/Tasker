@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Tasker.Views.Widgets.TaskCard"
+             x:Name="this">
+    <ContentView.Content>
+        <StackLayout>
+            <Frame Padding="5" Margin="0,3" BorderColor="#8f05ff" CornerRadius="15" HasShadow="True" BackgroundColor="{Binding CardBackgroundColor, Source={x:Reference this}}">
+                <StackLayout>
+                    <Label Text="{Binding Name, Source={x:Reference this}}" TextColor="#000"  FontSize="18" />
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="{Binding Description, Source={x:Reference this}}" 
+                               FontSize="16"
+                               TextColor="#333"/>
+                        <StackLayout Orientation="Horizontal"
+                                     VerticalOptions="CenterAndExpand"
+                                     HorizontalOptions="EndAndExpand">
+                            <ImageButton BackgroundColor="Transparent" WidthRequest="30" IsVisible="{Binding IsTaskStartedVisible, Source={x:Reference this}}" Source="task_play.png" Clicked="TaskStartClicked" />
+                            <ImageButton BackgroundColor="Transparent" WidthRequest="30" IsVisible="{Binding IsTaskPausedVisible, Source={x:Reference this}}" Source="task_pause.png" Clicked="TaskPauseClicked" />
+                            <ImageButton BackgroundColor="Transparent" WidthRequest="30" IsVisible="{Binding IsTaskDoneVisible, Source={x:Reference this}}" Source="task_done.png" Clicked="TaskDoneClicked" />
+                            <ImageButton BackgroundColor="Transparent" WidthRequest="30" IsVisible="{Binding IsTaskCancelVisible, Source={x:Reference this}}" Source="task_cancel.png" Clicked="TaskCancelClicked" />
+                        </StackLayout>
+                    </StackLayout>
+                </StackLayout>
+            </Frame>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>
