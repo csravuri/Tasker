@@ -1,105 +1,68 @@
-﻿using SQLite;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
+using SQLite;
 using Tasker.Models;
+using Tasker.Utils;
 
 namespace Tasker.Database
 {
-    public class DbConnection
-    {
-        private SQLiteAsyncConnection _connection;
-        private static DbConnection _dbConnection;
-        private string _dbPath;
-        private static readonly object lockObject = new object();
-        private static bool _isInitialized = false;
+	public class DbConnection
+	{
+		public async Task Create<T>(T model)
+		{
+			await Init();
+			await connection.InsertAsync(model);
+		}
 
-        public Task<List<TaskHeaderModel>> TaskHeaders => _connection.Table<TaskHeaderModel>().ToListAsync();
-        public Task<List<TaskLineModel>> TaskLines => _connection.Table<TaskLineModel>().ToListAsync();
+		public async Task<T> Get<T>(int id) where T : class, new()
+		{
+			await Init();
+			return await connection.GetAsync<T>(id); ;
+		}
 
-        private DbConnection()
-        {
-            string folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Database");
+		public async Task<List<T>> GetAll<T>(Expression<Func<T, bool>> func) where T : class, new()
+		{
+			await Init();
+			return await connection.Table<T>().Where(func).ToListAsync();
+		}
 
-            Directory.CreateDirectory(folderPath);
+		public async Task Update<T>(T model)
+		{
+			await Init();
+			await connection.UpdateAsync(model);
+		}
 
-            _dbPath = Path.Combine(folderPath, "TaskerDB.db3");
+		public async Task Delete<T>(int id)
+		{
+			await Init();
+			await connection.DeleteAsync<T>(id);
+		}
 
-            _connection = new SQLiteAsyncConnection(_dbPath);
-        }
 
-        private async Task Initialize()
-        {
-            await CreateTable();
+		async Task Init()
+		{
+			if (connection is not null)
+			{
+				return;
+			}
 
-            _isInitialized = true;
-        }
+			connection = new SQLiteAsyncConnection(DbFullPath(), DbFlags);
+			await connection.CreateTablesAsync(CreateFlags.None, typeof(TaskHeaderModel));
+		}
 
-        public static async Task<DbConnection> GetDbConnection()
-        {
-            lock (lockObject)
-            {
-                if (_dbConnection == null)
-                {
-                    _dbConnection = new DbConnection();
-                }
-            }
+		string DbFullPath()
+		{
+			var dbFolderPath = Path.Combine(GlobalConstants.RootFolder, DbSubFolder);
+			if (!Directory.Exists(dbFolderPath))
+			{
+				Directory.CreateDirectory(dbFolderPath);
+			}
 
-            if (!_isInitialized)
-            {
-                await _dbConnection.Initialize();
-            }
+			return Path.Combine(dbFolderPath, DbFileName);
+		}
 
-            return _dbConnection;
-        }
-
-        private async Task CreateTable()
-        {
-            await _connection.CreateTableAsync<TaskHeaderModel>();
-            await _connection.CreateTableAsync<TaskLineModel>();
-        }
-
-        public async Task InsertRecord<E>(List<E> items) where E : BaseModel
-        {
-            items.ForEach(x => x.CreatedDate = DateTime.Now);
-            await _connection.InsertAllAsync(items);
-        }
-
-        public async Task InsertRecord<E>(E item) where E : BaseModel
-        {
-            item.CreatedDate = DateTime.Now;
-            await _connection.InsertAsync(item);
-        }
-
-        public async Task UpdateRecord<E>(List<E> items) where E : BaseModel
-        {
-            items.ForEach(x => x.ModifiedDate = DateTime.Now);
-            await _connection.UpdateAllAsync(items);
-        }
-
-        public async Task UpdateRecord<E>(E item) where E : BaseModel
-        {
-            item.ModifiedDate = DateTime.Now;
-            await _connection.UpdateAsync(item);
-        }
-
-        public async Task DeleteRecord<E>(List<E> items) where E : BaseModel
-        {
-            foreach (E item in items)
-            {
-                await DeleteRecord<E>(item);
-            }
-        }
-
-        public async Task DeleteRecord<E>(E item) where E : BaseModel
-        {
-            await _connection.DeleteAsync(item);
-        }
-
-        public string GetDBPath()
-        {
-            return _dbPath;
-        }
-    }
+		SQLiteAsyncConnection connection;
+		const string DbFileName = "TaskerSqLite.db3";
+		const string DbSubFolder = "Database";
+		const SQLiteOpenFlags DbFlags = SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite;
+	}
 }

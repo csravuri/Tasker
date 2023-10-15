@@ -1,62 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Tasker.Database;
 
 namespace Tasker.ViewModels
 {
-    public class BaseViewModel : INotifyPropertyChanged
-    {
-        private bool isBusy = false;
+	public class BaseViewModel : INotifyPropertyChanged
+	{
+		private bool isBusy = false;
 
-        public bool IsBusy
-        {
-            get { return isBusy; }
-            set { SetProperty(ref isBusy, value); }
-        }
+		public bool IsBusy
+		{
+			get { return isBusy; }
+			set { SetProperty(ref isBusy, value); }
+		}
 
-        private string title = "Tasker";
+		private string title = "Tasker";
 
-        public string Title
-        {
-            get { return title; }
-            set { SetProperty(ref title, value); }
-        }
+		public string Title
+		{
+			get { return title; }
+			set { SetProperty(ref title, value); }
+		}
 
-        protected async Task<DbConnection> GetDbConnection() => await DbConnection.GetDbConnection();
+		protected async Task<DbConnection> GetDbConnection() => new DbConnection();
 
-        public virtual void OnAppearing()
-        {
-        }
+		public virtual void OnAppearing()
+		{
+		}
 
-        protected bool SetProperty<T>(ref T backingStore, T value,
-            [CallerMemberName] string propertyName = "",
-            Action onChanged = null)
-        {
-            if (EqualityComparer<T>.Default.Equals(backingStore, value))
-                return false;
+		protected bool SetProperty<T>(ref T backingStore, T value,
+			[CallerMemberName] string propertyName = "",
+			Action onChanged = null)
+		{
+			if (EqualityComparer<T>.Default.Equals(backingStore, value))
+				return false;
 
-            backingStore = value;
-            onChanged?.Invoke();
-            OnPropertyChanged(propertyName);
-            return true;
-        }
+			backingStore = value;
+			onChanged?.Invoke();
+			OnPropertyChanged(propertyName);
+			return true;
+		}
 
-        #region INotifyPropertyChanged
+		#region INotifyPropertyChanged
 
-        public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            var changed = PropertyChanged;
-            if (changed == null)
-                return;
+		protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+		{
+			var changed = PropertyChanged;
+			if (changed == null)
+				return;
 
-            changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+			changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
 
-        #endregion INotifyPropertyChanged
-    }
+		#endregion INotifyPropertyChanged
+	}
 }
