@@ -1,12 +1,15 @@
-﻿using SQLite;
-using System;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using SQLite;
 
 namespace Tasker.Models
 {
-    public class TaskLineModel : BaseModel
-    {
-        public Guid ID { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-    }
+	public class TaskLineModel
+	{
+		[PrimaryKey, AutoIncrement]
+		public int Id { get; set; }
+		[ForeignKey(nameof(TaskHeaderModel))]
+		public int HeaderId { get; set; }
+		public DateTime? StartTime { get; set; }
+		public DateTime? EndTime { get; set; }
+	}
 }

@@ -38,7 +38,6 @@ namespace Tasker.ViewModels
 				var dbConnection = await GetDbConnection();
 				var taskHeader = new TaskHeaderModel
 				{
-					ID = Guid.NewGuid(),
 					Name = TaskName,
 					Description = TaskDescription,
 					Status = TaskStatus.ReadyToStart
