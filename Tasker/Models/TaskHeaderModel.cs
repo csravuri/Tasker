@@ -2,6 +2,15 @@
 
 namespace Tasker.Models
 {
+	public class TaskHeaderGroupModel : List<TaskHeaderModel>
+	{
+		public TaskHeaderGroupModel(string name, IEnumerable<TaskHeaderModel> tasks) : base(tasks)
+		{
+			Name = name;
+		}
+
+		public string Name { get; }
+	}
 	public class TaskHeaderModel
 	{
 		[PrimaryKey, AutoIncrement]

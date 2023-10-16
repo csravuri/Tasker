@@ -1,41 +1,34 @@
-﻿using System.Windows.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Tasker.Database;
 using Tasker.Models;
 using TaskStatus = Tasker.Utils.Utils.TaskStatus;
 
 namespace Tasker.ViewModels
 {
-	public class TaskCreateViewModel : BaseViewModel
+	public partial class TaskCreateViewModel : ObservableObject
 	{
-		public ICommand CreateClickedCommand => new Command(async () => await ExecuteCreateClickedCommand());
-
-		public ICommand CancelClikedCommand => new Command(async () => await Shell.Current.GoToAsync(".."));
-
-		public string TaskName
-		{
-			get => taskName;
-			set => SetProperty(ref taskName, value);
-		}
-
-		private string taskName = string.Empty;
-
-		public string TaskDescription
-		{
-			get => taskDescription;
-			set => SetProperty(ref taskDescription, value);
-		}
-
-		private string taskDescription = string.Empty;
-
-		public TaskCreateViewModel()
+		public TaskCreateViewModel(DbConnection dbConnection)
 		{
 			Title = "Create New Task";
+			this.dbConnection = dbConnection;
 		}
 
-		private async Task ExecuteCreateClickedCommand()
+		[ObservableProperty]
+		string taskName;
+
+		[ObservableProperty]
+		private string taskDescription;
+
+		[ObservableProperty]
+		private string title;
+		private readonly DbConnection dbConnection;
+
+		[RelayCommand]
+		async Task Create()
 		{
 			if (IsValid())
 			{
-				var dbConnection = await GetDbConnection();
 				var taskHeader = new TaskHeaderModel
 				{
 					Name = TaskName,
@@ -56,7 +49,13 @@ namespace Tasker.ViewModels
 			}
 		}
 
-		private bool IsValid()
+		[RelayCommand]
+		async Task Cancel()
+		{
+			await Shell.Current.GoToAsync("..");
+		}
+
+		bool IsValid()
 		{
 			if (string.IsNullOrWhiteSpace(TaskName))
 			{
@@ -67,7 +66,7 @@ namespace Tasker.ViewModels
 			return true;
 		}
 
-		private void ClearAll()
+		void ClearAll()
 		{
 			TaskName = string.Empty;
 			TaskDescription = string.Empty;

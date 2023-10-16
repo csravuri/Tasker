@@ -1,25 +1,20 @@
 ﻿using Tasker.ViewModels;
-using Microsoft.Maui.Controls.Xaml;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui;
 
 namespace Tasker.Views
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class TaskView : ContentPage
-    {
-        private TaskViewViewModel viewModel;
+	[XamlCompilation(XamlCompilationOptions.Compile)]
+	public partial class TaskView : ContentPage
+	{
+		public TaskView(TaskViewViewModel vm)
+		{
+			InitializeComponent();
+			BindingContext = vm;
+		}
 
-        public TaskView()
-        {
-            InitializeComponent();
-            BindingContext = viewModel = new TaskViewViewModel();
-        }
-
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-            viewModel.OnAppearing();
-        }
-    }
+		//protected override void OnAppearing()
+		//{
+		//    base.OnAppearing();
+		//    viewModel.OnAppearing();
+		//}
+	}
 }

@@ -1,31 +1,27 @@
-﻿using Tasker.Models;
-using Tasker.ViewModels;
-using Microsoft.Maui.Controls.Xaml;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui;
+﻿using Tasker.ViewModels;
 
 namespace Tasker.Views
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class TaskHome : ContentPage
-    {
-        private TaskHomeViewModel viewModel;
+	[XamlCompilation(XamlCompilationOptions.Compile)]
+	public partial class TaskHome : ContentPage
+	{
+		private readonly TaskHomeViewModel vm;
 
-        public TaskHome()
-        {
-            InitializeComponent();
-            BindingContext = viewModel = new TaskHomeViewModel();
-        }
+		public TaskHome(TaskHomeViewModel vm)
+		{
+			InitializeComponent();
+			BindingContext = this.vm = vm;
+		}
 
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-            viewModel.OnAppearing();
-        }
+		private void OnTaskStatusChanged(object sender, Models.TaskHeaderModel e)
+		{
+			vm.TaskStatusChangeCommand.Execute(e);
+		}
 
-        private void OnTaskStatusChange(object sender, object e)
-        {
-            viewModel.OnTaskStatusChange(e as TaskHeaderModel);
-        }
-    }
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			vm.ReLoadTasksCommand.Execute(null);
+		}
+	}
 }

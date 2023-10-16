@@ -2,14 +2,16 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Tasker.Views.TaskCreate"
+			 xmlns:viewModels="clr-namespace:Tasker.ViewModels"
+			 x:DataType="viewModels:TaskCreateViewModel"
              Title="{Binding Title}">
     <ContentPage.Content>
         <StackLayout>
             <Entry Placeholder="Title" Text="{Binding TaskName}" ReturnType="Next"/>
             <Entry Placeholder="Description" Text="{Binding TaskDescription}" ReturnType="Done"/>
             <StackLayout Orientation="Horizontal">
-                <Button Text="Create" Command="{Binding CreateClickedCommand}" />
-                <Button Text="Cancel" Command="{Binding CancelClikedCommand}" />
+                <Button Text="Create" Command="{Binding CreateCommand}" />
+                <Button Text="Cancel" Command="{Binding CancelCommand}" />
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

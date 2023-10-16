@@ -15,6 +15,7 @@ namespace Tasker.Views.Widgets
 		public static readonly BindableProperty IsTaskDoneVisibleProperty = BindableProperty.Create(nameof(IsTaskDoneVisible), typeof(bool), typeof(TaskCard));
 		public static readonly BindableProperty IsTaskCancelVisibleProperty = BindableProperty.Create(nameof(IsTaskCancelVisible), typeof(bool), typeof(TaskCard));
 		public static readonly BindableProperty CardBackgroundColorProperty = BindableProperty.Create(nameof(CardBackgroundColor), typeof(string), typeof(TaskCard));
+		public static readonly BindableProperty TaskStatusChangeCommandProperty = BindableProperty.Create(nameof(TaskStatusChangeCommand), typeof(Command<TaskHeaderModel>), typeof(TaskCard));
 
 		public TaskHeaderModel TaskHeader
 		{
@@ -65,6 +66,8 @@ namespace Tasker.Views.Widgets
 		}
 
 		public event EventHandler<TaskHeaderModel> TaskStatusChange;
+
+		public Command<TaskHeaderModel> TaskStatusChangeCommand { get; set; }
 
 		public TaskCard()
 		{
@@ -119,28 +122,31 @@ namespace Tasker.Views.Widgets
 		private void TaskStartClicked(object sender, EventArgs e)
 		{
 			TaskHeader.Status = TaskStatus.Running;
-			TaskStatusChange?.Invoke(this, TaskHeader);
-			DecideButtonVisibility(TaskHeader);
+			InformTaskStatusChange();
 		}
 
 		private void TaskPauseClicked(object sender, EventArgs e)
 		{
 			TaskHeader.Status = TaskStatus.Paused;
-			TaskStatusChange?.Invoke(this, TaskHeader);
-			DecideButtonVisibility(TaskHeader);
+			InformTaskStatusChange();
 		}
 
 		private void TaskDoneClicked(object sender, EventArgs e)
 		{
 			TaskHeader.Status = TaskStatus.Completed;
-			TaskStatusChange?.Invoke(this, TaskHeader);
-			DecideButtonVisibility(TaskHeader);
+			InformTaskStatusChange();
 		}
 
 		private void TaskCancelClicked(object sender, EventArgs e)
 		{
 			TaskHeader.Status = TaskStatus.Cancelled;
+			InformTaskStatusChange();
+		}
+
+		void InformTaskStatusChange()
+		{
 			TaskStatusChange?.Invoke(this, TaskHeader);
+			TaskStatusChangeCommand?.Execute(TaskHeader);
 			DecideButtonVisibility(TaskHeader);
 		}
 

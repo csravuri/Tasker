@@ -1,56 +1,75 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Tasker.Database;
 using Tasker.Models;
 using Tasker.Views;
 using TaskStatus = Tasker.Utils.Utils.TaskStatus;
 
 namespace Tasker.ViewModels
 {
-	public class TaskHomeViewModel : BaseViewModel
+	public partial class TaskHomeViewModel : ObservableObject
 	{
-		public ICommand NewTaskCreateCommand => new Command(async () => await Shell.Current.GoToAsync(nameof(TaskCreate)));
-
-		public ObservableCollection<TaskHeaderModel> Running { get; private set; }
-		public ObservableCollection<TaskHeaderModel> Paused { get; private set; }
-		public ObservableCollection<TaskHeaderModel> ReadyToStart { get; private set; }
-
-		public TaskHomeViewModel()
+		public TaskHomeViewModel(DbConnection dbConnection)
 		{
-			Running = new ObservableCollection<TaskHeaderModel>();
-			Paused = new ObservableCollection<TaskHeaderModel>();
-			ReadyToStart = new ObservableCollection<TaskHeaderModel>();
+			this.dbConnection = dbConnection;
+			Title = "Home";
+			Tasks = new ObservableCollection<TaskHeaderGroupModel>();
 		}
 
-		public override async void OnAppearing()
+		public ObservableCollection<TaskHeaderGroupModel> Tasks { get; private set; }
+
+		[ObservableProperty]
+		string title;
+
+		[RelayCommand]
+		async Task CreateNewTask()
 		{
-			base.OnAppearing();
-			await ReLoadTasks();
+			await Shell.Current.GoToAsync(nameof(TaskCreate));
 		}
 
-		private async Task ReLoadTasks()
+		[RelayCommand]
+		async Task ReLoadTasks()
 		{
-			var dbConnection = await GetDbConnection();
-
 			var taskHeaders = await dbConnection.GetAll<TaskHeaderModel>(x => true);
-			LoadTasks(Running, taskHeaders.Where(t => t.Status == TaskStatus.Running));
-			LoadTasks(Paused, taskHeaders.Where(t => t.Status == TaskStatus.Paused));
-			LoadTasks(ReadyToStart, taskHeaders.Where(t => t.Status == TaskStatus.ReadyToStart));
+			Tasks.Clear();
+
+			LoadTasks("Running", taskHeaders.Where(t => t.Status == TaskStatus.Running));
+			LoadTasks("Paused", taskHeaders.Where(t => t.Status == TaskStatus.Paused));
+			LoadTasks("Ready to Start", taskHeaders.Where(t => t.Status == TaskStatus.ReadyToStart));
 		}
 
-		private void LoadTasks(ObservableCollection<TaskHeaderModel> destination, IEnumerable<TaskHeaderModel> source)
+		[RelayCommand]
+		async Task TaskStatusChange(TaskHeaderModel header)
 		{
-			destination.Clear();
-			foreach (var header in source)
-			{
-				destination.Add(header);
-			}
-		}
-
-		public async void OnTaskStatusChange(TaskHeaderModel header)
-		{
-			var dbConnection = await GetDbConnection();
+			await UpdateOtherRunningTask(header);
 			await dbConnection.Update(header);
 			await ReLoadTasks();
 		}
+
+		async Task UpdateOtherRunningTask(TaskHeaderModel header)
+		{
+			if (header.Status != TaskStatus.Running)
+			{
+				return;
+			}
+
+			foreach (var task in await dbConnection.GetAll<TaskHeaderModel>(x => x.Id != header.Id && x.Status == TaskStatus.Running))
+			{
+				task.Status = TaskStatus.Paused;
+				await dbConnection.Update(task);
+			}
+		}
+
+		void LoadTasks(string name, IEnumerable<TaskHeaderModel> items)
+		{
+			if (items == null || !items.Any())
+			{
+				return;
+			}
+			Tasks.Add(new TaskHeaderGroupModel(name, items));
+		}
+
+		private readonly DbConnection dbConnection;
 	}
 }

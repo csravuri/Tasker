@@ -1,6 +1,8 @@
-﻿namespace Tasker.ViewModels
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace Tasker.ViewModels
 {
-    public class TaskViewViewModel : BaseViewModel
-    {
-    }
+	public class TaskViewViewModel : ObservableObject
+	{
+	}
 }
