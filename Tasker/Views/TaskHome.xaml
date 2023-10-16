@@ -7,27 +7,23 @@
 			 xmlns:models="clr-namespace:Tasker.Models"
 			 x:DataType="viewModels:TaskHomeViewModel"
              Title="{Binding Title}">
-    <ContentPage.Content>
-        <ScrollView>
-            <StackLayout Padding="0,5">
-                <Button Text=" + Task" HorizontalOptions="Center" CornerRadius="50" Command="{Binding CreateNewTaskCommand}" />
-				<CollectionView
+	<StackLayout Padding="5">
+		<Button Text=" + Task" HorizontalOptions="Center" CornerRadius="50" Command="{Binding CreateNewTaskCommand}" />
+		<CollectionView
 					IsGrouped="True"
 					ItemsSource="{Binding Tasks}">
-					<CollectionView.GroupHeaderTemplate>
-						<DataTemplate x:DataType="models:TaskHeaderGroupModel">
-							<Label Text="{Binding Name}"
+			<CollectionView.GroupHeaderTemplate>
+				<DataTemplate x:DataType="models:TaskHeaderGroupModel">
+					<Label Text="{Binding Name}"
 								   FontSize="Large"
 								   FontAttributes="Bold"/>
-						</DataTemplate>
-					</CollectionView.GroupHeaderTemplate>
-					<CollectionView.ItemTemplate>
-						<DataTemplate x:DataType="models:TaskHeaderModel">
-							<widgets:TaskCard TaskHeader="{Binding .}" TaskStatusChange="OnTaskStatusChanged"/>
-						</DataTemplate>
-					</CollectionView.ItemTemplate>
-				</CollectionView>
-            </StackLayout>
-        </ScrollView>        
-    </ContentPage.Content>
+				</DataTemplate>
+			</CollectionView.GroupHeaderTemplate>
+			<CollectionView.ItemTemplate>
+				<DataTemplate x:DataType="models:TaskHeaderModel">
+					<widgets:TaskCard TaskHeader="{Binding .}" TaskStatusChange="OnTaskStatusChanged"/>
+				</DataTemplate>
+			</CollectionView.ItemTemplate>
+		</CollectionView>
+	</StackLayout>
 </ContentPage>
