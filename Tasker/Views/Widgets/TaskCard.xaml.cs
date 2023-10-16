@@ -14,7 +14,7 @@ namespace Tasker.Views.Widgets
 		public static readonly BindableProperty IsTaskPausedVisibleProperty = BindableProperty.Create(nameof(IsTaskPausedVisible), typeof(bool), typeof(TaskCard));
 		public static readonly BindableProperty IsTaskDoneVisibleProperty = BindableProperty.Create(nameof(IsTaskDoneVisible), typeof(bool), typeof(TaskCard));
 		public static readonly BindableProperty IsTaskCancelVisibleProperty = BindableProperty.Create(nameof(IsTaskCancelVisible), typeof(bool), typeof(TaskCard));
-		public static readonly BindableProperty CardBackgroundColorProperty = BindableProperty.Create(nameof(CardBackgroundColor), typeof(string), typeof(TaskCard));
+		public static readonly BindableProperty CardBackgroundColorProperty = BindableProperty.Create(nameof(CardBackgroundColor), typeof(Color), typeof(TaskCard));
 		public static readonly BindableProperty TaskStatusChangeCommandProperty = BindableProperty.Create(nameof(TaskStatusChangeCommand), typeof(Command<TaskHeaderModel>), typeof(TaskCard));
 
 		public TaskHeaderModel TaskHeader
@@ -59,9 +59,9 @@ namespace Tasker.Views.Widgets
 			set => SetValue(IsTaskCancelVisibleProperty, value);
 		}
 
-		public string CardBackgroundColor
+		public Color CardBackgroundColor
 		{
-			get => (string)GetValue(CardBackgroundColorProperty);
+			get => (Color)GetValue(CardBackgroundColorProperty);
 			set => SetValue(CardBackgroundColorProperty, value);
 		}
 
