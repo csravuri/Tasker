@@ -22,6 +22,13 @@ namespace Tasker.ViewModels
 
 		[ObservableProperty]
 		private string title;
+
+		[ObservableProperty]
+		bool stayHereOnCreate = true;
+
+		[ObservableProperty]
+		string stayHereOnCreateCaption = "Stay Here On Create";
+
 		private readonly DbConnection dbConnection;
 
 		[RelayCommand]
@@ -38,7 +45,7 @@ namespace Tasker.ViewModels
 
 				await dbConnection.Create(taskHeader);
 
-				if (await Shell.Current.DisplayAlert("Info", "Want to create again?", "Yes", "No"))
+				if (StayHereOnCreate)
 				{
 					ClearAll();
 				}
@@ -53,6 +60,12 @@ namespace Tasker.ViewModels
 		async Task Cancel()
 		{
 			await Shell.Current.GoToAsync("..");
+		}
+
+		[RelayCommand]
+		void TapStayHereOnCreate()
+		{
+			StayHereOnCreate = !StayHereOnCreate;
 		}
 
 		bool IsValid()

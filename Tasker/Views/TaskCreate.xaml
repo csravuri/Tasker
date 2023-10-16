@@ -5,14 +5,39 @@
 			 xmlns:viewModels="clr-namespace:Tasker.ViewModels"
 			 x:DataType="viewModels:TaskCreateViewModel"
              Title="{Binding Title}">
-    <ContentPage.Content>
-        <StackLayout>
-            <Entry Placeholder="Title" Text="{Binding TaskName}" ReturnType="Next"/>
-            <Entry Placeholder="Description" Text="{Binding TaskDescription}" ReturnType="Done"/>
-            <StackLayout Orientation="Horizontal">
-                <Button Text="Create" Command="{Binding CreateCommand}" />
-                <Button Text="Cancel" Command="{Binding CancelCommand}" />
-            </StackLayout>
-        </StackLayout>
-    </ContentPage.Content>
+	<StackLayout>
+		<Entry 
+			Placeholder="Title" 
+			Text="{Binding TaskName}" 
+			Keyboard="Chat"
+			ReturnType="Next"/>
+		<Entry 
+			Placeholder="Description" 
+			Text="{Binding TaskDescription}" 
+			Keyboard="Chat"
+			ReturnType="Done"/>
+		<HorizontalStackLayout>
+			<CheckBox IsChecked="{Binding StayHereOnCreate}"/>
+			<Label 
+				Text="{Binding StayHereOnCreateCaption}"
+				VerticalTextAlignment="Center"
+				FontAttributes="Italic">
+				<Label.GestureRecognizers>
+					<TapGestureRecognizer Command="{Binding TapStayHereOnCreateCommand}"/>
+				</Label.GestureRecognizers>
+			</Label>
+		</HorizontalStackLayout>
+		<Grid
+			ColumnDefinitions="*, *"
+			ColumnSpacing="30"
+			Padding="5">
+			<Button 
+				Text="Cancel" 
+				Command="{Binding CancelCommand}"/>
+			<Button 
+				Text="Create" 
+				Command="{Binding CreateCommand}"
+				Grid.Column="1" />
+		</Grid>
+	</StackLayout>
 </ContentPage>
