@@ -3,26 +3,42 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Tasker.Views.Widgets.TaskCard"
              x:Name="this">
-    <ContentView.Content>
-        <StackLayout>
-            <Frame Padding="5" Margin="0,3" BorderColor="#8f05ff" CornerRadius="15" HasShadow="True" BackgroundColor="{Binding CardBackgroundColor, Source={x:Reference this}}">
-                <StackLayout>
-                    <Label Text="{Binding Name, Source={x:Reference this}}" TextColor="#000"  FontSize="18" />
-                    <StackLayout Orientation="Horizontal">
-                        <Label Text="{Binding Description, Source={x:Reference this}}" 
-                               FontSize="16"
-                               TextColor="#333"/>
-                        <StackLayout Orientation="Horizontal"
-                                     VerticalOptions="CenterAndExpand"
-                                     HorizontalOptions="EndAndExpand">
-                            <ImageButton BackgroundColor="Transparent" WidthRequest="30" IsVisible="{Binding IsTaskStartedVisible, Source={x:Reference this}}" Source="task_play.png" Clicked="TaskStartClicked" />
-                            <ImageButton BackgroundColor="Transparent" WidthRequest="30" IsVisible="{Binding IsTaskPausedVisible, Source={x:Reference this}}" Source="task_pause.png" Clicked="TaskPauseClicked" />
-                            <ImageButton BackgroundColor="Transparent" WidthRequest="30" IsVisible="{Binding IsTaskDoneVisible, Source={x:Reference this}}" Source="task_done.png" Clicked="TaskDoneClicked" />
-                            <ImageButton BackgroundColor="Transparent" WidthRequest="30" IsVisible="{Binding IsTaskCancelVisible, Source={x:Reference this}}" Source="task_cancel.png" Clicked="TaskCancelClicked" />
-                        </StackLayout>
-                    </StackLayout>
-                </StackLayout>
-            </Frame>
-        </StackLayout>
-    </ContentView.Content>
+	<Border
+		Stroke="Blue"
+		BackgroundColor="{Binding CardBackgroundColor, Source={x:Reference this}}"
+		StrokeThickness="5"
+		Padding="4">
+		<Border.StrokeShape>
+			<RoundRectangle CornerRadius="0, 10, 10, 0"/>
+		</Border.StrokeShape>
+		<Border.Shadow>
+			<Shadow 
+				Brush="Orange"
+				Offset="10,10"
+				Radius="50"
+				Opacity=".6"/>
+		</Border.Shadow>
+	<Grid 
+		RowDefinitions="1.2*, 0.8*, *"
+		Padding="3">
+		<Label 
+			Text="{Binding Name, Source={x:Reference this}}" 
+			TextColor="#000"  
+			FontAttributes="Bold"
+			FontSize="Large"/>
+		<Label 
+			Text="{Binding Description, Source={x:Reference this}}"
+			FontSize="Medium"
+			TextColor="#333" 
+			Grid.Row="1"/>
+		<HorizontalStackLayout
+			HorizontalOptions="EndAndExpand"
+			Grid.Row="2">
+			<ImageButton VerticalOptions="Start" WidthRequest="40" IsVisible="{Binding IsTaskStartedVisible, Source={x:Reference this}}" Source="task_play.png" Clicked="TaskStartClicked" />
+			<ImageButton VerticalOptions="Start" WidthRequest="40" IsVisible="{Binding IsTaskPausedVisible, Source={x:Reference this}}" Source="task_pause.png" Clicked="TaskPauseClicked" />
+			<ImageButton VerticalOptions="Start" WidthRequest="40" IsVisible="{Binding IsTaskDoneVisible, Source={x:Reference this}}" Source="task_done.png" Clicked="TaskDoneClicked" />
+			<ImageButton VerticalOptions="Start" WidthRequest="40" IsVisible="{Binding IsTaskCancelVisible, Source={x:Reference this}}" Source="task_cancel.png" Clicked="TaskCancelClicked" />
+		</HorizontalStackLayout>
+	</Grid>
+	</Border>
 </ContentView>
