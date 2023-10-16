@@ -8,7 +8,11 @@
 			 x:DataType="viewModels:TaskHomeViewModel"
              Title="{Binding Title}">
 	<StackLayout Padding="5">
-		<Button Text=" + Task" HorizontalOptions="Center" CornerRadius="50" Command="{Binding CreateNewTaskCommand}" />
+		<Button 
+			Text=" + Task" 
+			FontSize="Title"
+			HorizontalOptions="Center" CornerRadius="50" 
+			Command="{Binding CreateNewTaskCommand}" />
 		<CollectionView
 					IsGrouped="True"
 					ItemsSource="{Binding Tasks}">

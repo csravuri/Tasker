@@ -13,7 +13,7 @@ namespace Tasker.ViewModels
 		public TaskHomeViewModel(DbConnection dbConnection)
 		{
 			this.dbConnection = dbConnection;
-			Title = "Home";
+			Title = "Tasker";
 			Tasks = new ObservableCollection<TaskHeaderGroupModel>();
 		}
 
